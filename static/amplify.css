@@ -1,0 +1,128 @@
+/* General styles */
+body {
+    font-family: 'Lexend Deca', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #F9F9F9;
+}
+
+/* Container */
+.container {
+    width: 90vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Logo */
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 2vw;
+}
+
+/* Dividers */
+.horizontal-line {
+    height: 2px;
+    background-color: #EEEEEE;
+}
+
+.vertical-line {
+    position: absolute;
+    top: 39px;
+    left: 50%;
+    width: 2px;
+    height: 90vh; /* Adjusted for responsiveness */
+    background-color: #EEEEEE;
+}
+
+/* Content */
+.content {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3vw;
+}
+
+/* Left column */
+.left {
+    width: 50%;
+    padding: 20px;
+}
+
+.analyze {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5vw;
+    margin-bottom: 10px;
+}
+
+.subtext {
+    font-size: 1.2vw;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+#websiteInput {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.continue-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #B0B0B0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.continue-button:enabled {
+    background-color: #1a1a1a;
+    cursor: pointer;
+}
+
+/* Right column */
+.right {
+    width: 50%;
+    padding: 20px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 1.2vw;
+}
+
+/* Input fields */
+#domain, #description, #keywords, #prompt {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    background-color: #d9d9d9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 60px;
+    max-height: 300px;
+    resize: vertical;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#pagespeedSection textarea {
+    min-height: 100px;
+    background-color: #e0e0e0;
+}

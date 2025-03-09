@@ -1,0 +1,45 @@
+/* General styles */
+body {
+    font-family: 'Lexend Deca', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F9F9F9;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Preloader container */
+.preloader-container {
+    text-align: center;
+}
+
+/* Logo */
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+/* Spinner */
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #1a1a1a;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Loading text */
+.loading-text {
+    font-size: 1.2vw;
+    color: #666;
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Lexend+Deca:wght@400;700&display=swap" rel="stylesheet">
+    <title>Amplify - Результаты анализа</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="logo">Amplify</header>
+        <div class="horizontal-line"></div>
+        <main class="content">
+            <section class="result-section">
+                <h1 class="result-title">Результаты анализа</h1>
+                <div class="result-item">
+                    <label>Домен:</label>
+                    <input type="text" id="domain" value="{{ results.metrics.title }}" readonly>
+                </div>
+                <div class="result-item">
+                    <label>Описание:</label>
+                    <textarea id="description" rows="3" readonly>{{ results.description }}</textarea>
+                </div>
+                <div class="result-item">
+                    <label>Ключевые слова:</label>
+                    <textarea id="keywords" rows="2" readonly>{{ results.keywords }}</textarea>
+                </div>
+                <div class="result-item">
+                    <label>Промпт:</label>
+                    <textarea id="prompt" rows="3" readonly>{{ results.prompt }}</textarea>
+                </div>
+                <div class="result-item">
+                    <label>Рекомендации:</label>
+                    <textarea id="recommendations" rows="5" readonly>{{ ', '.join(results.recommendations) }}</textarea>
+                </div>
+                <div class="result-item">
+                    <label>PageSpeed Insights:</label>
+                    <textarea id="pagespeed" rows="5" readonly>{{ results.metrics.pagespeed | tojson | safe }}</textarea>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='result.js') }}"></script>
+</body>
+</html>

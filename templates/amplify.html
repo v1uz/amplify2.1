@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Lexend+Deca:wght@400;700&display=swap" rel="stylesheet">
+    <title>Amplify</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='amplify.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="logo">Amplify</header>
+        <div class="horizontal-line"></div>
+        <main class="content">
+            <section class="left">
+                <h1 class="analyze">Analyze your website instantly</h1>
+                <p class="subtext">Enter your website and let AI do the magic</p>
+                <div class="input-group">
+                    <input type="text" id="websiteInput" placeholder="example.com">
+                </div>
+                <button class="continue-button" id="continueBtn" disabled>Continue</button>
+            </section>
+            <div class="vertical-line"></div>
+            <section class="right">
+                <label for="domain">Domain</label>
+                <input type="text" id="domain" readonly>
+                <label for="description">Description</label>
+                <textarea id="description" rows="3" placeholder="Website description will appear here after analysis"></textarea>
+                <label for="keywords">Main keywords</label>
+                <textarea id="keywords" rows="2" placeholder="Keywords will appear here after analysis"></textarea>
+                <label for="prompt">Prompt</label>
+                <textarea id="prompt" rows="3" placeholder="AI prompt for analysis will appear here"></textarea>
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='amplify.js') }}"></script>
+</body>
+</html>

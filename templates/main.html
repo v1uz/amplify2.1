@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <title>Amplify - AI-Powered SEO</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="logo">Amplify</div>
+            <ul class="nav-links">
+                <li><a href="#">Product</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+        </div>
+        <div class="auth-buttons">
+            <a href="#" class="login">Login</a>
+            <a href="/" class="cta-button">Get Started For Free</a> <!-- Redirect to amplify page -->
+        </div>
+    </nav>
+    
+    <header class="hero-section">
+        <h1 class="hero-title">AI-Powered Website <br> Starts Here</h1>
+        <p class="hero-subtitle">AI-driven SEO insights to drive organic growth, increase conversions, and boost site performance.</p>
+        <div class="hero-buttons">
+            <button class="primary-btn" id="tryNowBtn">Try It Right Now</button> <!-- Use ID for JS targeting -->
+            <button class="secondary-btn" id="learnMoreBtn">Learn More</button> <!-- Use ID for JS targeting -->
+        </div>
+    </header>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

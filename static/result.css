@@ -1,0 +1,76 @@
+/* General styles */
+body {
+    font-family: 'Lexend Deca', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F9F9F9;
+}
+
+/* Container */
+.container {
+    width: 90vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Logo */
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 2vw;
+}
+
+/* Dividers */
+.horizontal-line {
+    height: 2px;
+    background-color: #EEEEEE;
+}
+
+/* Content */
+.content {
+    margin-top: 3vw;
+}
+
+/* Result section */
+.result-section {
+    padding: 20px;
+}
+
+.result-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5vw;
+    margin-bottom: 20px;
+}
+
+.result-item {
+    margin-bottom: 15px;
+}
+
+.result-item label {
+    font-weight: bold;
+    font-size: 1.2vw;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.result-item input, .result-item textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #d9d9d9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+.result-item textarea {
+    min-height: 60px;
+    max-height: 300px;
+}
+
+#pagespeed textarea {
+    min-height: 100px;
+    background-color: #e0e0e0;
+}

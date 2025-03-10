@@ -8,6 +8,7 @@ from flask_cors import CORS
 import os
 import logging
 from cachetools import TTLCache
+from flask import request
 
 # Import configuration
 from app.config import config_by_name

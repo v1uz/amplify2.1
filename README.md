@@ -93,3 +93,9 @@ Run the tests with pytest:
 ```
 pytest
 ```
+6. Github
+```
+git add .
+git commit -m "some commit"
+git push origin main
+```

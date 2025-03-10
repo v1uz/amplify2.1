@@ -36,11 +36,11 @@
                 </div>
                 <div class="result-item">
                     <label>PageSpeed Insights:</label>
-                    <textarea id="pagespeed" rows="5" readonly>{{ results.metrics.pagespeed | tojson | safe }}</textarea>
+                    <textarea id="pagespeed" rows="5" readonly>{{ (results.metrics.pagespeed or {}) | tojson | safe }}</textarea>
                 </div>
             </section>
         </main>
     </div>
-    <script src="{{ url_for('static', filename='result.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/result.js') }}"></script>
 </body>
 </html>

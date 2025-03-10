@@ -5,8 +5,6 @@ const descriptionInput = document.getElementById("description");
 const keywordsInput = document.getElementById("keywords");
 const promptInput = document.getElementById("prompt");
 const errorMessage = document.createElement("p");
-errorMessage.style.color = "red";
-errorMessage.style.display = "none";
 websiteInput.parentElement.appendChild(errorMessage);
 
 websiteInput.addEventListener("input", function() {

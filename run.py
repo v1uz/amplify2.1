@@ -4,6 +4,24 @@ This script serves as the entry point for running the Amplify SEO analysis appli
 """
 
 import os
+from dotenv import load_dotenv
+
+# Load environment variables first
+print("Loading environment variables...")
+load_dotenv()
+
+print("Importing app...")
+from app import create_app
+
+# Create application instance
+app = create_app(os.getenv('FLASK_ENV', 'development'))
+
+if __name__ == '__main__':
+    print("Starting Flask development server...")
+    app.run(host='0.0.0.0', port=5002, debug=True)
+
+"""
+import os
 import asyncio
 import logging
 from hypercorn.config import Config
@@ -61,3 +79,4 @@ if __name__ == '__main__':
         logger.error(f"Failed to start server: {e}")
         import traceback
         traceback.print_exc()
+"""

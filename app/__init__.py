@@ -57,16 +57,20 @@ def create_app(config_name='default'):
     # Custom static route to ensure proper MIME types
     @app.route('/static/<path:filename>')
     def custom_static(filename):
-        cache_timeout = app.get_send_file_max_age(filename)
-        response = send_from_directory(app.static_folder, filename, 
-                                      max_age=cache_timeout)
-        
-        # Set correct MIME types
+        """Explicit static file handler with correct MIME types."""
+        response = send_from_directory(app.static_folder, filename)
+    
+        # Explicitly override Content-Type headers based on file extension
         if filename.endswith('.css'):
             response.headers['Content-Type'] = 'text/css'
         elif filename.endswith('.js'):
             response.headers['Content-Type'] = 'application/javascript'
-        
+    
+        # Add cache prevention during development
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    
         return response
     
     # Debug route to check static files

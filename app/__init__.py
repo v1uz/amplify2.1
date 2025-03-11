@@ -26,7 +26,13 @@ def create_app(config_name='default'):
     Returns:
         Flask: The configured Flask application
     """
-    app = Flask(__name__, template_folder='templates')
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    static_folder = os.path.join(project_root, 'static')
+
+# Then in your Flask initialization
+    app = Flask(__name__, 
+            static_folder=static_folder,
+            template_folder='templates')
     
     # Load configuration based on environment
     app.config.from_object(config_by_name[config_name])

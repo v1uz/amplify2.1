@@ -9,6 +9,18 @@ import logging
 from hypercorn.config import Config
 from hypercorn.asyncio import serve
 from dotenv import load_dotenv
+import sys
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+logger.debug("Starting application initialization...")
+
+# Before each important import
+logger.debug("About to import create_app...")
+from app import create_app
+logger.debug("Successfully imported create_app")
 
 # Load environment variables from .env file
 load_dotenv()

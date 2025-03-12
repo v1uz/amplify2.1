@@ -9,14 +9,22 @@
     <title>Amplify - AI-Powered SEO</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <style>
-        /* Copy all styles from main.css here */
+        /* General Reset */
         * {
-            margin: 0;
+            margin: 0 ;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Roboto', sans-serif;
         }
         
+        .container{
+            max-width: 1200px;
+            width: 90%; /* Ensures content scales on smaller screens */
+            margin: 0 auto; /* Centers the content */
+        }
+        
+        
+        /* Body Styling */
         body {
             background: linear-gradient(#ffffff 75%, #8B97AF 100%);
         }
@@ -28,8 +36,163 @@
             color: #090901;
         }
         
-        /* Add the rest of your main.css content here */
-        </style>
+        /* Navbar */
+        .navbar {
+            position: fixed; /* Keep navbar fixed at top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.3); /* Semi-transparent white */
+            backdrop-filter: blur(5px); /* Blur effect */
+            -webkit-backdrop-filter: blur(45px); /* Safari support */
+            padding: 0.9rem 3rem; /* Adjust padding */
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            transition: all 0.3s ease-in-out; /* Smooth transition */
+            z-index: 1000; /* Ensure it's above other elements */
+            padding:10px,5%;
+        }
+        .nav-left{
+            display: flex;
+            align-items: center;
+            gap:0.625rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #121826;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .nav-links {
+            display:flex;
+            list-style: none;
+            gap:1rem;
+        }
+        
+        .nav-links li a {
+            text-decoration: none;
+            color: #121826;
+            font-size: 1em;
+            font-weight: 500;
+            padding: 10px 16px; 
+            border-radius: 8px;
+            transition: background 0.3s ease, box shadow 0.3s ease;
+            position: static;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(246, 246, 246, 0.6); /* Lighter on hover */
+            /*box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);*/
+        }
+        
+        /* Auth Buttons */
+        .auth-buttons {
+            display: flex;
+            align-items: center; /* Aligns login and button vertically */
+            gap: 1rem; 
+            
+        }
+        
+        .auth-buttons .login {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 500;
+            transition: color 0.3s;
+          
+        }
+        
+        .auth-buttons .login:hover {
+            color: #4a90e2;
+         
+        }
+        
+        .cta-button {
+            background: #3f6ce1;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 60px;
+            font-weight: 500;
+            transition: background 0.3s ease-in-out;
+        }
+        
+        .cta-button:hover {
+            background: #357ABD;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+            text-align: center;
+            height:100vh;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 100px;
+            font-weight: 2000;
+            color: #10064e;
+        }
+        .extra-bold {
+            text-shadow: 0px 1px, 1px 0px, 1px 1px;
+          }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #0c0c0c;
+            margin: 20px 50px 50px 100px;
+            max-width: 600px;
+        }
+        
+        /* Buttons */
+        .hero-buttons {
+            margin-top: 0px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .primary-btn {
+            font-weight: 700; 
+            background: #3f6ce1;
+            color: white;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        
+        .primary-btn:hover {
+            background: #357ABD;
+            box-shadow: 0px 4px 10px rgba(74, 144, 226, 0.4);
+        }
+        
+        .secondary-btn {
+            background: #e1e2e7;
+            color: #10064e;
+            padding: 18px 60px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background 0.3s ease-in-out;
+        }
+        
+        .secondary-btn:hover {
+            background: #d0d0d0;
+        }
+
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -44,7 +207,7 @@
         </div>
         <div class="auth-buttons">
             <a href="#" class="login">Login</a>
-            <a href="/" class="cta-button">Get Started For Free</a> <!-- Redirect to amplify page -->
+            <a href="/amplify" class="cta-button">Get Started For Free</a> <!-- Redirect to amplify page -->
         </div>
     </nav>
     

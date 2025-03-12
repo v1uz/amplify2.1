@@ -3,36 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Lexend+Deca:wght@400;700&display=swap" rel="stylesheet">
-    <title>Amplify</title><link rel="stylesheet" href="{{ url_for('static', filename='css/amplify.css') }}"></head>
+    <title>Amplify - Website Analysis Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Lexend+Deca:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/amplify.css">
+</head>
 <body>
     <div class="container">
-        <header class="logo">Amplify</header>
+        <!-- Logo -->
+        <div class="logo">Amplify</div>
+        
+        <!-- Horizontal line -->
         <div class="horizontal-line"></div>
-        <main class="content">
-            <section class="left">
+        
+        <!-- Vertical line divider -->
+        <div class="vertical-line"></div>
+        
+        <!-- Main content area with two columns -->
+        <div class="content">
+            <!-- Left column - URL input area -->
+            <div class="left">
                 <h1 class="analyze">Analyze your website instantly</h1>
                 <p class="subtext">Enter your website and let AI do the magic</p>
+                
                 <div class="input-group">
-                    <input type="text" id="websiteInput" placeholder="example.com">
+                    <input type="text" id="websiteInput" placeholder="example.com" autocomplete="off">
                 </div>
-                <button class="continue-button" id="continueBtn" disabled>Continue</button>
-            </section>
-            <div class="vertical-line"></div>
-            <section class="right">
-                <label for="domain">Domain</label>
-                <input type="text" id="domain" readonly>
-                <label for="description">Description</label>
-                <textarea id="description" rows="3" placeholder="Website description will appear here after analysis"></textarea>
-                <label for="keywords">Main keywords</label>
-                <textarea id="keywords" rows="2" placeholder="Keywords will appear here after analysis"></textarea>
-                <label for="prompt">Prompt</label>
-                <textarea id="prompt" rows="3" placeholder="AI prompt for analysis will appear here"></textarea>
-            </section>
-        </main>
+                
+                <button class="continue-button" id="continueButton" disabled>Continue</button>
+            </div>
+            
+            <!-- Right column - Features and info -->
+            <div class="right">
+                <!-- Features showcase section -->
+                <div class="features-showcase">
+                    <h2 class="showcase-title">What We Analyze</h2>
+                    <div class="feature-list">
+                        <div class="feature-card">
+                            <div class="feature-icon seo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h3>SEO Analysis</h3>
+                                <p>Comprehensive review of meta tags, headers, content quality, and keyword optimization</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon perf">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Performance Metrics</h3>
+                                <p>Load times, resource optimization, and Google PageSpeed insights</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon access">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 8v4"></path>
+                                    <path d="M12 16h.01"></path>
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Accessibility Check</h3>
+                                <p>Recommendations for improvement</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon mobile">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="18" x2="12" y2="18"></line>
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Mobile Responsiveness</h3>
+                                <p>Testing for mobile-friendly design and user experience</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- How it works section -->
+                <!--<div class="how-it-works">
+                    <h2 class="steps-title">How It Works</h2>
+                    <div class="steps-container">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Enter Your URL</h4>
+                                <p>Provide the website address you want to analyze</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>AI Analysis</h4>
+                                <p>Our system scans your website and evaluates key factors</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Get Results</h4>
+                                <p>Receive detailed insights and actionable recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                
+                <!-- Trust indicators -->
+                <!--<div class="trust-indicators">
+                    <div class="trust-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        <span>Secure Analysis</span>
+                    </div>
+                    
+                    <div class="trust-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                        <span>5,000+ Sites Analyzed</span>
+                    </div>
+                    
+                    <div class="trust-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Free Account</span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="{{ url_for('static', filename='js/amplify.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/error-handling.js') }}"></script>
-    
+
+    <script>
+        // Simple validation for the URL input field
+        const websiteInput = document.getElementById('websiteInput');
+        const continueButton = document.getElementById('continueButton');
+
+        websiteInput.addEventListener('input', function() {
+            // Enable button only if there's text in the input
+            if (websiteInput.value.trim() !== '') {
+                continueButton.removeAttribute('disabled');
+            } else {
+                continueButton.setAttribute('disabled', 'disabled');
+            }
+        });
+
+        // Handle the continue button click
+        continueButton.addEventListener('click', function() {
+            const url = websiteInput.value.trim();
+            if (url) {
+                // Redirect to the preloader page with the URL as a parameter
+                window.location.href = `/preloader?url=${encodeURIComponent(url)}`;
+            }
+        });
+
+        // Allow form submission with Enter key
+        websiteInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !continueButton.disabled) {
+                continueButton.click();
+            }
+        });
+    </script>
 </body>
 </html>

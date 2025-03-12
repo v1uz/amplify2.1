@@ -1,10 +1,17 @@
+/* 
+ * Amplify.css - Complete redesign
+ * Combines elements from preloader.html and main.css
+ * with a new right column design
+ */
+
 /* General styles */
 body {
     font-family: 'Lexend Deca', sans-serif;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    background-color: #F9F9F9;
+    background: linear-gradient(#ffffff 75%, #E8EBF3 100%);
+    color: #121826;
+    min-height: 100vh;
 }
 
 /* Container */
@@ -13,6 +20,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
+    padding: 2rem 0;
 }
 
 /* Logo */
@@ -20,109 +28,352 @@ body {
     font-family: 'Orbitron', sans-serif;
     font-size: 30px;
     text-align: center;
-    margin-top: 2vw;
+    margin: 2rem 0;
+    color: #090901;
+    font-weight: 900;
 }
 
 /* Dividers */
 .horizontal-line {
     height: 2px;
     background-color: #EEEEEE;
+    margin: 1rem 0;
 }
 
 .vertical-line {
     position: absolute;
-    top: 39px;
+    top: 80px;
     left: 50%;
     width: 2px;
-    height: 90vh; /* Adjusted for responsiveness */
+    height: calc(100% - 120px);
     background-color: #EEEEEE;
 }
 
-/* Content */
+/* Main content */
 .content {
     display: flex;
     justify-content: space-between;
-    margin-top: 3vw;
+    margin-top: 2rem;
+    gap: 30px;
 }
 
-/* Left column */
+/* Left column - Main input area */
 .left {
     width: 50%;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .analyze {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2.5vw;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #10064e;
+    font-weight: 900;
+    line-height: 1.1;
 }
 
 .subtext {
-    font-size: 1.2vw;
+    font-size: 1.1rem;
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
+    line-height: 1.5;
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
+    width: 100%;
 }
 
 #websiteInput {
     width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid #e1e2e7;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #FAFAFA;
+}
+
+#websiteInput:focus {
+    outline: none;
+    border-color: #3f6ce1;
+    box-shadow: 0 0 0 3px rgba(63, 108, 225, 0.1);
 }
 
 .continue-button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 700;
     background-color: #B0B0B0;
     color: white;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    border-radius: 50px;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+    margin-top: 1rem;
 }
 
 .continue-button:enabled {
-    background-color: #1a1a1a;
+    background-color: #3f6ce1;
     cursor: pointer;
 }
 
-/* Right column */
+.continue-button:enabled:hover {
+    background-color: #357ABD;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(63, 108, 225, 0.3);
+}
+
+/* Right column with features and info */
 .right {
     width: 50%;
-    padding: 20px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
 }
 
-label {
-    font-weight: bold;
-    font-size: 1.2vw;
+/* Features showcase section */
+.features-showcase {
+    margin-bottom: 25px;
 }
 
-/* Input fields */
-#domain, #description, #keywords, #prompt {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 15px;
-    background-color: #d9d9d9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.showcase-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    color: #10064e;
+    margin-bottom: 20px;
+    font-weight: 700;
 }
 
-textarea {
-    width: 100%;
-    min-height: 60px;
-    max-height: 300px;
-    resize: vertical;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    padding: 10px;
+/* Feature cards */
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-#pagespeedSection textarea {
-    min-height: 100px;
-    background-color: #e0e0e0;
+.feature-card {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid #3f6ce1;
+}
+
+.feature-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 3px 10px rgba(63, 108, 225, 0.15);
+}
+
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #e1e2e7;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.feature-icon.seo {
+    background-color: #e1f5fe;
+    color: #0288d1;
+}
+
+.feature-icon.perf {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.feature-icon.access {
+    background-color: #fff8e1;
+    color: #ffa000;
+}
+
+.feature-icon.mobile {
+    background-color: #f3e5f5;
+    color: #8e24aa;
+}
+
+.feature-content {
+    flex: 1;
+}
+
+.feature-content h3 {
+    font-family: 'Lexend Deca', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #121826;
+}
+
+.feature-content p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* How it works section */
+.how-it-works {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #f3f3f3;
+}
+
+.steps-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    color: #10064e;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #3f6ce1;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h4 {
+    font-family: 'Lexend Deca', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #121826;
+}
+
+.step-content p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Trust indicators */
+.trust-indicators {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.trust-badge {
+    padding: 8px 15px;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+}
+
+.trust-badge span {
+    margin-left: 5px;
+}
+
+/* Animation for the dots (from preloader) */
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+.loading-dots::after {
+    content: '.';
+    animation: dots 1.5s infinite;
+}
+
+/* Responsive adaptations */
+@media (max-width: 1024px) {
+    .analyze {
+        font-size: 2rem;
+    }
+    
+    .subtext {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .content {
+        flex-direction: column;
+    }
+    
+    .left, .right {
+        width: 100%;
+    }
+    
+    .vertical-line {
+        display: none;
+    }
+    
+    .right {
+        margin-top: 30px;
+    }
+    
+    .trust-indicators {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+    }
+    
+    .analyze {
+        font-size: 1.8rem;
+    }
+    
+    .logo {
+        font-size: 24px;
+    }
+    
+    .continue-button {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .feature-card {
+        flex-direction: column;
+    }
+    
+    .feature-icon {
+        margin-bottom: 10px;
+    }
 }

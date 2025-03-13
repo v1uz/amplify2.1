@@ -42,6 +42,7 @@ def result():
     seo_results = session.get('seo_results')
     if not seo_results:
         return redirect(url_for('main.amplify'))
+    print("SEO RESULTS:", seo_results)
     return render_template('result.html', results=seo_results)
 
 import os

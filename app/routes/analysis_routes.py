@@ -1,61 +1,90 @@
-"""
-Analysis routes for Amplify application.
-These routes handle SEO analysis functionality.
-"""
-
-from flask import Blueprint, request, jsonify, session, url_for
-import logging
-
-# Import services
-from app.services.analyzer import analyze_seo
+from flask import Blueprint, request, jsonify, render_template
+from app.services.analyzer import get_meta_description
 from app.utils.url_validator import validate_url
-from app.services.pagespeed import fetch_website_data
+import requests
+from bs4 import BeautifulSoup
+import re
+import random  # For demo purposes only
 
-# Create blueprint for analysis routes
+# Create blueprint
 analysis_bp = Blueprint('analysis', __name__)
 
-# Set up logging
-logger = logging.getLogger(__name__)
+# Description generator page
+@analysis_bp.route('/description')
+def description_page():
+    return render_template('description.html')
 
-@analysis_bp.route('/analyze', methods=['POST'])
-def analyze():
-    """Synchronous route for the analyze endpoint"""
+# API endpoint for description generation
+@analysis_bp.route('/api/description', methods=['POST'])
+def generate_description():
+    data = request.json
+    
+    if not data or 'url' not in data:
+        return jsonify({'error': 'URL is required'}), 400
+    
+    url = data.get('url')
+    regenerate = data.get('regenerate', False)
+    
+    # Validate URL
+    if not validate_url(url):
+        return jsonify({'error': 'Invalid URL format'}), 400
+    
     try:
-        data = request.get_json()
-        if not data or 'url' not in data:
-            return jsonify({"error": "URL не предоставлен"}), 400
-
-        # Get URL from request data
-        url = data['url']
-        logger.info(f"Received URL for analysis: {url}")
-
-        # Validate and normalize the URL
-        is_valid, formatted_url = validate_url(url)
-        if not is_valid:
-            return jsonify({"error": "Неверный формат URL"}), 400
-
-        # Fetch website content - using synchronous or async approach based on configuration
-        try:
-            # If fetch_website_data is still async, we need to run it in a sync context
-            import asyncio
-            html_content, error = asyncio.run(fetch_website_data(formatted_url))
-        except (RuntimeError, TypeError):
-            # If we're already in an event loop or fetch_website_data is not async
-            # Note: You may need to implement a synchronous version of this function if needed
-            html_content, error = fetch_website_data(formatted_url)
-
-        if error:
-            logger.error(f"Error fetching {formatted_url}: {error}")
-            return jsonify({"error": error}), 400
-
-        # Run the now-synchronous analyze_seo function
-        seo_results = analyze_seo(html_content, formatted_url)
-
-        # Store results in session for display on results page
-        session['seo_results'] = seo_results
-
-        return jsonify({"redirect": url_for('main.result')}), 200
-
+        # Fetch webpage content
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        
+        # Parse with BeautifulSoup
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Extract title
+        title = soup.title.string if soup.title else 'Unknown Company'
+        
+        # Extract meta description
+        meta_desc_tag = soup.find('meta', attrs={'name': 'description'})
+        meta_description = meta_desc_tag.get('content', '') if meta_desc_tag else ''
+        
+        # Clean up meta description
+        meta_description = meta_description.strip() or 'No meta description found'
+        
+        # In a real app, you'd use BERT or another model here
+        # For demo, generate a simple description based on page content
+        paragraphs = soup.find_all('p')
+        text_content = ' '.join([p.get_text() for p in paragraphs[:5]])
+        
+        # Simple text processing
+        text_content = re.sub(r'\s+', ' ', text_content).strip()
+        
+        # Create a generated description (simplified for demo)
+        words = text_content.split()[:50]  # Take first 50 words
+        generated_description = ' '.join(words) + '...'
+        
+        # If no content was found or regenerate was requested,
+        # create a fallback or alternative
+        if not generated_description or regenerate:
+            company_types = ['technology', 'e-commerce', 'service', 'consulting', 'manufacturing']
+            adjectives = ['innovative', 'leading', 'trusted', 'experienced', 'customer-focused']
+            
+            type_idx = hash(url + str(regenerate)) % len(company_types)
+            adj_idx = (hash(url + str(regenerate)) + 1) % len(adjectives)
+            
+            generated_description = (f"A {adjectives[adj_idx]} {company_types[type_idx]} company "
+                                    f"dedicated to providing high-quality solutions for clients worldwide. "
+                                    f"With years of experience in the industry, {title} offers exceptional "
+                                    f"products and services designed to meet modern market demands.")
+        
+        # Calculate fake confidence score
+        confidence = random.randint(70, 95) if regenerate else random.randint(80, 98)
+        
+        # Return results
+        return jsonify({
+            'title': title,
+            'meta_description': meta_description,
+            'generated_description': generated_description,
+            'confidence': confidence
+        })
+    
+    except requests.RequestException as e:
+        return jsonify({'error': f'Failed to fetch website: {str(e)}'}), 500
     except Exception as e:
-        logger.error(f"Error in /analyze: {str(e)}")
-        return jsonify({"error": "Произошла внутренняя ошибка сервера: " + str(e)}), 500
+        return jsonify({'error': f'Error processing request: {str(e)}'}), 500

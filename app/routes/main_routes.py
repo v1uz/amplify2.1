@@ -88,3 +88,11 @@ def debug_static(filename):
     
     response.headers['X-Debug-Info'] = f"File: {filename}, MIME: {mime_type}"
     return response
+
+@main_bp.route('/result-gauge')
+def results_gauge():
+    """Render the analysis results page with gauge visualization."""
+    seo_results = session.get('seo_results')
+    if not seo_results:
+        return redirect(url_for('main.amplify'))
+    return render_template('result_gauge.html', results=seo_results)

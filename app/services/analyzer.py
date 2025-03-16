@@ -375,27 +375,7 @@ class TechnicalSEOAnalyzer:
 
 class MobileAnalyzer:
     
-    def _analyze_responsive_css(self, soup):
-    """Analyze responsive CSS implementation"""
-    # Check for media queries in style tags
-    style_tags = soup.find_all('style')
-    media_queries = []
     
-    for style in style_tags:
-        if style.string and '@media' in style.string:
-            media_queries.append(style.string)
-    
-    # Check for responsive CSS file links
-    responsive_links = soup.find_all('link', rel='stylesheet', href=re.compile(r'responsive|mobile|adaptive'))
-    
-    # Check for inline responsive styles
-    elements_with_media = soup.find_all(style=re.compile(r'@media'))
-    
-    return {
-        "has_media_queries": len(media_queries) > 0 or len(elements_with_media) > 0,
-        "responsive_stylesheets": len(responsive_links) > 0,
-        "is_responsive": (len(media_queries) > 0 or len(responsive_links) > 0 or len(elements_with_media) > 0)
-    }
     """Analyzes mobile-friendliness of a webpage"""
     
     def __init__(self):

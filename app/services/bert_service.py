@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqGeneration
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import numpy as np
 from typing import List, Dict, Any, Optional
 import logging
@@ -10,24 +10,17 @@ logger = logging.getLogger(__name__)
 class BERTDescriptionGenerator:
     """Service for generating company descriptions using BERT."""
     
-    def __init__(self, model_name: str = "t5-base"):
-        """
-        Initialize the BERT description generator.
-        
-        Args:
-            model_name: The name of the pre-trained model to use
-        """
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        logger.info(f"Using device: {self.device}")
-        
+    def __init__(self, model_name='t5-base', device='cpu'):
+        """Initialize with error handling"""
+        self.model_loaded = False
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-            self.model = AutoModelForSeq2SeqGeneration.from_pretrained(model_name)
-            self.model.to(self.device)
-            logger.info(f"Loaded model: {model_name}")
+            self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+            self.model.to(device)
+            self.device = device
+            self.model_loaded = True
         except Exception as e:
-            logger.error(f"Failed to load model: {e}")
-            raise
+            logging.error(f"Failed to load model: {e}")
             
     def extract_key_content(self, text: str) -> str:
         """

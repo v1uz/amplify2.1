@@ -44,6 +44,28 @@
             overflow: hidden;
             transition: max-height 0.2s ease-out;
         }
+        .confidence-indicator {
+            margin-top: 0.5rem;
+        }
+        
+        .confidence-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+        
+        .confidence-bar {
+            height: 5px;
+            background-color: #e9ecef;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background-color: #3f6ce1;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -101,8 +123,14 @@
                     <input type="text" id="domain" value="{{ results.metrics.title }}" readonly>
                 </div>
                 <div class="result-item">
-                    <label>Описание:</label>
-                    <textarea id="description" rows="3" readonly>{{ results.description }}</textarea>
+                    <label>AI-Generated Description:</label>
+                    <textarea id="bert-description" rows="5" readonly>{{ results.bert_description }}</textarea>
+                    <div class="confidence-indicator">
+                        <div class="confidence-label">Confidence: {{ "%.0f"|format(results.bert_confidence * 100) }}%</div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: {{ results.bert_confidence * 100 }}%;"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="result-item">
                     <label>Ключевые слова:</label>

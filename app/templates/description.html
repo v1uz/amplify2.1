@@ -1,77 +1,290 @@
-{% extends "base.html" %}
-
-{% block title %}Amplify - Company Description Generator{% endblock %}
-
-{% block content %}
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="mb-4">Company Description Generator</h1>
-            <p class="lead">Generate accurate company descriptions using BERT natural language processing.</p>
-            
-            <div class="card mb-4">
-                <div class="card-body">
-                    <form id="description-form">
-                        <div class="mb-3">
-                            <label for="url" class="form-label">Website URL</label>
-                            <div class="input-group">
-                                <input type="url" class="form-control" id="url" name="url" 
-                                       placeholder="https://example.com" required>
-                                <button class="btn btn-primary" type="submit" id="analyze-btn">
-                                    <span class="btn-text">Analyze</span>
-                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                            <div class="form-text">Enter the URL of the company website you want to analyze.</div>
-                        </div>
-                    </form>
-                </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amplify - Company Description Generator</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Custom styling -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        
+        .navbar {
+            background-color: #3f6ce1;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: white;
+        }
+        
+        .btn-primary {
+            background-color: #3f6ce1;
+            border-color: #3f6ce1;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2b56c7;
+            border-color: #2b56c7;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-control:focus {
+            border-color: #3f6ce1;
+            box-shadow: 0 0 0 0.25rem rgba(63, 108, 225, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Amplify</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/description">Description Generator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                </ul>
             </div>
-            
-            <!-- Results section, initially hidden -->
-            <div id="results-section" class="d-none">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Generated Company Description</h5>
-                        <span class="badge bg-primary" id="confidence-badge">Confidence: 0%</span>
-                    </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="mb-4">Company Description Generator</h1>
+                <p class="lead">Generate accurate company descriptions using BERT natural language processing.</p>
+                
+                <div class="card mb-4">
                     <div class="card-body">
-                        <h4 id="company-title" class="mb-3"></h4>
-                        
-                        <div class="mb-4">
-                            <h6 class="text-muted">Original Meta Description</h6>
-                            <p id="meta-description" class="border-bottom pb-3"></p>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h6 class="text-muted">BERT Generated Description</h6>
-                            <p id="generated-description" class="border-bottom pb-3 fw-bold"></p>
-                        </div>
-                        
-                        <div class="alert alert-info" role="alert">
-                            <i class="bi bi-info-circle-fill me-2"></i>
-                            This description was automatically generated using BERT natural language processing.
-                            The confidence score indicates the model's certainty in its output.
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-outline-secondary btn-sm" id="copy-btn">
-                            <i class="bi bi-clipboard me-1"></i> Copy Description
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm ms-2" id="regenerate-btn">
-                            <i class="bi bi-arrow-repeat me-1"></i> Regenerate
-                        </button>
+                        <form id="description-form">
+                            <div class="mb-3">
+                                <label for="url" class="form-label">Website URL</label>
+                                <div class="input-group">
+                                    <input type="url" class="form-control" id="url" name="url" 
+                                           placeholder="https://example.com" required>
+                                    <button class="btn btn-primary" type="submit" id="analyze-btn">
+                                        <span class="btn-text">Analyze</span>
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <div class="form-text">Enter the URL of the company website you want to analyze.</div>
+                            </div>
+                        </form>
                     </div>
                 </div>
+                
+                <!-- Results section, initially hidden -->
+                <div id="results-section" class="d-none">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Generated Company Description</h5>
+                            <span class="badge bg-primary" id="confidence-badge">Confidence: 0%</span>
+                        </div>
+                        <div class="card-body">
+                            <h4 id="company-title" class="mb-3"></h4>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted">Original Meta Description</h6>
+                                <p id="meta-description" class="border-bottom pb-3"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-muted">BERT Generated Description</h6>
+                                <p id="generated-description" class="border-bottom pb-3 fw-bold"></p>
+                            </div>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                                This description was automatically generated using BERT natural language processing.
+                                The confidence score indicates the model's certainty in its output.
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-outline-secondary btn-sm" id="copy-btn">
+                                <i class="bi bi-clipboard me-1"></i> Copy Description
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm ms-2" id="regenerate-btn">
+                                <i class="bi bi-arrow-repeat me-1"></i> Regenerate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Error alert, initially hidden -->
+                <div class="alert alert-danger d-none mt-3" role="alert" id="error-alert"></div>
             </div>
-            
-            <!-- Error alert, initially hidden -->
-            <div class="alert alert-danger d-none mt-3" role="alert" id="error-alert"></div>
         </div>
     </div>
-</div>
-{% endblock %}
 
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/description.js') }}"></script>
-{% endblock %}
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 Amplify. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        $(document).ready(function() {
+            // Form submission
+            $('#description-form').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Get URL
+                const url = $('#url').val().trim();
+                
+                // Validate URL
+                if (!url) {
+                    showError('Please enter a valid URL');
+                    return;
+                }
+                
+                // Show loading state
+                $('#analyze-btn .btn-text').text('Analyzing...');
+                $('#analyze-btn .spinner-border').removeClass('d-none');
+                $('#analyze-btn').prop('disabled', true);
+                $('#error-alert').addClass('d-none');
+                
+                // Send AJAX request
+                $.ajax({
+                    url: '/api/generate-description',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ url: url }),
+                    success: function(response) {
+                        // Hide loading state
+                        $('#analyze-btn .btn-text').text('Analyze');
+                        $('#analyze-btn .spinner-border').addClass('d-none');
+                        $('#analyze-btn').prop('disabled', false);
+                        
+                        // Display results
+                        displayResults(response);
+                    },
+                    error: function(xhr) {
+                        // Hide loading state
+                        $('#analyze-btn .btn-text').text('Analyze');
+                        $('#analyze-btn .spinner-border').addClass('d-none');
+                        $('#analyze-btn').prop('disabled', false);
+                        
+                        // Show error
+                        let errorMessage = 'An error occurred while analyzing the website';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMessage = xhr.responseJSON.error;
+                        }
+                        showError(errorMessage);
+                    }
+                });
+            });
+            
+            // Copy button functionality
+            $('#copy-btn').on('click', function() {
+                const description = $('#generated-description').text();
+                navigator.clipboard.writeText(description)
+                    .then(() => {
+                        const originalText = $(this).html();
+                        $(this).html('<i class="bi bi-check-circle me-1"></i> Copied!');
+                        setTimeout(() => {
+                            $(this).html(originalText);
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        showError('Failed to copy text: ' + err);
+                    });
+            });
+            
+            // Regenerate button functionality
+            $('#regenerate-btn').on('click', function() {
+                const url = $('#url').val().trim();
+                
+                // Show loading state
+                $(this).prop('disabled', true);
+                $(this).html('<i class="bi bi-arrow-repeat me-1"></i> Regenerating...');
+                
+                // Send AJAX request
+                $.ajax({
+                    url: '/api/regenerate-description',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ url: url }),
+                    success: function(response) {
+                        // Reset button
+                        $('#regenerate-btn').prop('disabled', false);
+                        $('#regenerate-btn').html('<i class="bi bi-arrow-repeat me-1"></i> Regenerate');
+                        
+                        // Update description and confidence
+                        $('#generated-description').text(response.bert_description);
+                        $('#confidence-badge').text('Confidence: ' + Math.round(response.bert_confidence * 100) + '%');
+                    },
+                    error: function(xhr) {
+                        // Reset button
+                        $('#regenerate-btn').prop('disabled', false);
+                        $('#regenerate-btn').html('<i class="bi bi-arrow-repeat me-1"></i> Regenerate');
+                        
+                        // Show error
+                        let errorMessage = 'An error occurred while regenerating the description';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMessage = xhr.responseJSON.error;
+                        }
+                        showError(errorMessage);
+                    }
+                });
+            });
+            
+            // Helper function to display results
+            function displayResults(data) {
+                // Set title
+                $('#company-title').text(data.title || 'Company Analysis');
+                
+                // Set descriptions
+                $('#meta-description').text(data.meta_description || 'No meta description found');
+                $('#generated-description').text(data.bert_description);
+                
+                // Set confidence
+                const confidencePercent = Math.round(data.bert_confidence * 100);
+                $('#confidence-badge').text('Confidence: ' + confidencePercent + '%');
+                
+                // Show results section
+                $('#results-section').removeClass('d-none');
+                
+                // Scroll to results
+                $('html, body').animate({
+                    scrollTop: $('#results-section').offset().top - 20
+                }, 500);
+            }
+            
+            // Helper function to show errors
+            function showError(message) {
+                $('#error-alert').text(message).removeClass('d-none');
+            }
+        });
+    </script>
+</body>
+</html>

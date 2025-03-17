@@ -266,4 +266,4 @@ class WebsiteDataCollector:
             'with_alt': sum(1 for img in image_data if img['has_alt']),
             'without_alt': sum(1 for img in image_data if not img['has_alt']),
             'responsive': sum(1 for img in image_data if img['is_responsive']),
-            'svg': sum(
+            'svg': sum}

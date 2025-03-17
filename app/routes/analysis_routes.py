@@ -1,90 +1,58 @@
-from flask import Blueprint, request, jsonify, render_template
-from app.services.analyzer import get_meta_description
+# app/routes/analysis_routes.py
+
+# Add these imports
+from app.utils.site_crawler import crawl_website
+from app.services.bert_service import BERTDescriptionGenerator
+from flask import Blueprint, request, jsonify, session, url_for
+import logging
 from app.utils.url_validator import validate_url
-import requests
-from bs4 import BeautifulSoup
-import re
-import random  # For demo purposes only
+from app.services.pagespeed import fetch_website_data
 
-# Create blueprint
+logger = logging.getLogger(__name__)
 analysis_bp = Blueprint('analysis', __name__)
+from app.services.analyzers import legacy_analyze_seo
+# Initialize BERT service (do this outside the route handler for performance)
+bert_generator = BERTDescriptionGenerator()
 
-# Description generator page
-@analysis_bp.route('/description')
-def description_page():
-    return render_template('description.html')
-
-# API endpoint for description generation
-@analysis_bp.route('/api/description', methods=['POST'])
-def generate_description():
+@analysis_bp.route('/analyze', methods=['POST'])
+async def analyze_website():
+    """Handle website analysis request."""
     data = request.json
     
     if not data or 'url' not in data:
         return jsonify({'error': 'URL is required'}), 400
     
     url = data.get('url')
-    regenerate = data.get('regenerate', False)
     
     # Validate URL
-    if not validate_url(url):
+    is_valid, normalized_url = validate_url(url)
+    if not is_valid:
         return jsonify({'error': 'Invalid URL format'}), 400
     
     try:
-        # Fetch webpage content
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
+        # 1. Crawl the website to get content from multiple pages
+        site_content = await crawl_website(normalized_url, max_pages=5, max_depth=1)
         
-        # Parse with BeautifulSoup
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Extract title
-        title = soup.title.string if soup.title else 'Unknown Company'
-        
-        # Extract meta description
-        meta_desc_tag = soup.find('meta', attrs={'name': 'description'})
-        meta_description = meta_desc_tag.get('content', '') if meta_desc_tag else ''
-        
-        # Clean up meta description
-        meta_description = meta_description.strip() or 'No meta description found'
-        
-        # In a real app, you'd use BERT or another model here
-        # For demo, generate a simple description based on page content
-        paragraphs = soup.find_all('p')
-        text_content = ' '.join([p.get_text() for p in paragraphs[:5]])
-        
-        # Simple text processing
-        text_content = re.sub(r'\s+', ' ', text_content).strip()
-        
-        # Create a generated description (simplified for demo)
-        words = text_content.split()[:50]  # Take first 50 words
-        generated_description = ' '.join(words) + '...'
-        
-        # If no content was found or regenerate was requested,
-        # create a fallback or alternative
-        if not generated_description or regenerate:
-            company_types = ['technology', 'e-commerce', 'service', 'consulting', 'manufacturing']
-            adjectives = ['innovative', 'leading', 'trusted', 'experienced', 'customer-focused']
+        # 2. Get the HTML content for the main SEO analysis
+        html_content, error = await fetch_website_data(normalized_url)
+        if error:
+            return jsonify({'error': f'Failed to fetch website: {error}'}), 400
             
-            type_idx = hash(url + str(regenerate)) % len(company_types)
-            adj_idx = (hash(url + str(regenerate)) + 1) % len(adjectives)
-            
-            generated_description = (f"A {adjectives[adj_idx]} {company_types[type_idx]} company "
-                                    f"dedicated to providing high-quality solutions for clients worldwide. "
-                                    f"With years of experience in the industry, {title} offers exceptional "
-                                    f"products and services designed to meet modern market demands.")
+        # 3. Run the SEO analysis on the main page
+        seo_results = await legacy_analyze_seo(html_content, normalized_url)
         
-        # Calculate fake confidence score
-        confidence = random.randint(70, 95) if regenerate else random.randint(80, 98)
+        # 4. Generate BERT description using text from all crawled pages
+        all_text = "\n\n".join(site_content["texts"])
+        bert_result = bert_generator.process_webpage_content(all_text)
         
-        # Return results
-        return jsonify({
-            'title': title,
-            'meta_description': meta_description,
-            'generated_description': generated_description,
-            'confidence': confidence
-        })
-    
-    except requests.RequestException as e:
-        return jsonify({'error': f'Failed to fetch website: {str(e)}'}), 500
+        # 5. Add the BERT description to the results
+        seo_results['bert_description'] = bert_result.get('description', '')
+        seo_results['bert_confidence'] = bert_result.get('confidence', 0.0)
+        
+        # 6. Store results in session and redirect
+        session['seo_results'] = seo_results
+        return jsonify({'redirect': url_for('main.result')})
+        
     except Exception as e:
+        logger.error(f"Error analyzing {url}: {str(e)}")
         return jsonify({'error': f'Error processing request: {str(e)}'}), 500

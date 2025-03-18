@@ -124,12 +124,19 @@
                 </div>
                 <div class="result-item">
                     <label>AI-Generated Description:</label>
-                    <textarea id="bert-description" rows="5" readonly>{{ results.bert_description }}</textarea>
+                    <textarea id="bert-description" rows="5" readonly>{{ results.bert_description|default('No AI description generated') }}</textarea>
                     <div class="confidence-indicator">
+                        {% if results.bert_confidence is defined %}
                         <div class="confidence-label">Confidence: {{ "%.0f"|format(results.bert_confidence * 100) }}%</div>
                         <div class="confidence-bar">
                             <div class="confidence-fill" style="width: {{ results.bert_confidence * 100 }}%;"></div>
                         </div>
+                        {% else %}
+                        <div class="confidence-label">Confidence: N/A</div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 0%;"></div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="result-item">

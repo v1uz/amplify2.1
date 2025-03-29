@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Lexend+Deca:wght@400;700&display=swap" rel="stylesheet">
+    <title>Amplify - Error</title>
+    <style>
+        body {
+            font-family: 'Lexend Deca', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .error-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .error-title {
+            font-size: 2rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+        
+        .error-message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .home-button {
+            display: inline-block;
+            background-color: #3f6ce1;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .home-button:hover {
+            background-color: #2a4bab;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f3f5;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="logo">Amplify</header>
+        
+        <div class="error-container">
+            <h1 class="error-title">Oops! Something went wrong</h1>
+            <p class="error-message">{{ error }}</p>
+            <a href="/" class="home-button">Back to Home</a>
+        </div>
+    </div>
+    
+    <footer>
+        &copy; 2025 Amplify SEO. All rights reserved.
+    </footer>
+</body>
+</html>

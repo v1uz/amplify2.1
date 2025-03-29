@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+
+{% block title %}Amplify - Analysis Results for {{ results.url }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <!-- Main column: Analysis Results -->
+        <div class="col-lg-8">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">Analysis Results</h2>
+                    <span class="badge {% if results.from_cache %}bg-info{% else %}bg-primary{% endif %} text-white">
+                        {% if results.from_cache %}Cached{% else %}Fresh Analysis{% endif %}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <h3>
+                        <a href="{{ results.url }}" target="_blank" class="text-decoration-none">
+                            {{ results.title|default(results.url, true) }}
+                            <i class="fas fa-external-link-alt ms-2 small"></i>
+                        </a>
+                    </h3>
+                    <p class="text-muted">{{ results.url }}</p>
+                    
+                    {% if results.error %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ results.error }}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Score Overview -->
+                    <div class="row mt-4">
+                        <div class="col">
+                            <h4>SEO Score</h4>
+                            <div class="progress" style="height: 25px;">
+                                {% set seo_score = results.metrics.overall_score|default(0) %}
+                                <div class="progress-bar bg-{{ 'success' if seo_score >= 80 else 'warning' if seo_score >= 60 else 'danger' }}"
+                                     role="progressbar" style="width: {{ seo_score }}%;"
+                                     aria-valuenow="{{ seo_score }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ seo_score }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Meta Information -->
+                    <div class="mt-4">
+                        <h4>Meta Information</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th style="width: 30%">Title</th>
+                                        <td>{{ results.metrics.meta_analysis.title.content|default('No title found', true) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Description</th>
+                                        <td>{{ results.metrics.meta_analysis.description.content|default('No description found', true) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Keywords</th>
+                                        <td>{{ results.keywords|default('No keywords found', true) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Canonical URL</th>
+                                        <td>
+                                            {% if results.metrics is defined and results.metrics.technical_analysis is defined 
+                                               and results.metrics.technical_analysis.canonical is defined %}
+                                                {{ results.metrics.technical_analysis.canonical.url|default('No canonical URL found', true) }}
+                                            {% else %}
+                                                No canonical URL found
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- BERT Description -->
+                    <!--{% if results.bert_description %}
+                    <div class="mt-4">
+                        <h4>AI-Generated Description <span class="badge bg-primary">BERT</span></h4>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <p class="mb-2">{{ results.bert_description }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">Confidence: {{ "%.1f"|format(results.bert_confidence * 100) }}%</small>
+                                    <button class="btn btn-sm btn-outline-primary copy-btn" 
+                                            data-clipboard-text="{{ results.bert_description }}">
+                                        Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}-->
+                    {% if results.enhanced_description %}
+                    <div class="mt-4">
+                        <h4>Enhanced Description <span class="badge bg-success"></span></h4>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <p class="mb-2">{{ results.enhanced_description }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">AI-Enhanced</small>
+                                    <button class="btn btn-sm btn-outline-primary copy-btn" 
+                                            data-clipboard-text="{{ results.enhanced_description }}">
+                                        Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if results.ideal_customer_profile %}
+                    <div class="mt-4">
+                        <h4>Ideal Customer Profile <span class="badge bg-success"></span></h4>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Demographics:</strong> 25–55 years old, Mid-to-high income (£50,000+ annual income)</li>
+                                    <li class="list-group-item"><strong>Interests:</strong> Contemporary and modern interior design, High-quality craftsmanship and designer furniture</li>
+                                    <li class="list-group-item"><strong>Behavior:</strong> Willing to invest in premium, designer furniture and lighting, Prefers online shopping with seamless delivery options</li>
+                                    <li class="list-group-item"><strong>Needs:</strong> Access to high-quality, well-designed, and durable furniture and lighting</li>
+                                </ul>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <button class="btn btn-sm btn-outline-primary copy-btn" 
+                                            data-clipboard-text="Demographics: {{ results.ideal_customer_profile.demographics }}
+                    Interests: {{ results.ideal_customer_profile.interests }}
+                    Behavior: {{ results.ideal_customer_profile.behavior }}
+                    Needs: {{ results.ideal_customer_profile.needs }}
+                    Pain Points: {{ results.ideal_customer_profile.pain_points }}
+                    Marketing Recommendation: {{ results.ideal_customer_profile.marketing_recommendation }}">
+                                        Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- Recommendations -->
+                    <div class="mt-4">
+                        <h4>Recommendations</h4>
+                        {% if results.recommendations %}
+                        <div class="list-group">
+                            {% for recommendation in results.recommendations %}
+                            <div class="list-group-item">
+                                <i class="fas fa-check-circle me-2 text-success"></i> {{ recommendation }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No recommendations available</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Analysis completed in {{ results.analysis_time }}</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar: Additional Metrics -->
+        <div class="col-lg-4">
+            <!-- PageSpeed Insights -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">PageSpeed Insights</h5>
+                </div>
+                <div class="card-body">
+                    {% if results.metrics.pagespeed %}
+                    <div class="text-center mb-3">
+                        {% set performance_score = (results.metrics.pagespeed.performance_score * 100)|int %}
+                        <div class="progress-circle mx-auto"
+                             data-value="{{ performance_score }}"
+                             data-size="120"
+                             data-thickness="12"
+                             data-fill="{{ 'green' if performance_score >= 90 else 'orange' if performance_score >= 50 else 'red' }}">
+                            <span>{{ performance_score }}%</span>
+                        </div>
+                        <p class="mt-2">Performance Score</p>
+                    </div>
+                    
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="small text-muted">First Contentful Paint</div>
+                            <div>{{ results.metrics.pagespeed.fcp|default('N/A') }}</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="small text-muted">Speed Index</div>
+                            <div>{{ results.metrics.pagespeed.si|default('N/A') }}</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="small text-muted">Time to Interactive</div>
+                            <div>{{ results.metrics.pagespeed.tti|default('N/A') }}</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="small text-muted">First CPU Idle</div>
+                            <div>{{ results.metrics.pagespeed.fci|default('N/A') }}</div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-hourglass-half fa-3x mb-3 text-muted"></i>
+                        <p>PageSpeed data not available</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Content Analysis -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Content Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Word Count
+                            <span class="badge bg-primary rounded-pill">
+                                {{ results.metrics.content_analysis.word_count|default(0) }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Headers
+                            <span class="badge bg-primary rounded-pill">
+                                {{ results.metrics.content_analysis.heading_count|default(0) }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Images
+                            <span class="badge bg-primary rounded-pill">
+                                {{ results.metrics.content_analysis.image_count|default(0) }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Internal Links
+                            <span class="badge bg-primary rounded-pill">
+                                {{ results.metrics.content_analysis.internal_links|default(0) }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            External Links
+                            <span class="badge bg-primary rounded-pill">
+                                {{ results.metrics.content_analysis.external_links|default(0) }}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('main.amplify') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-search"></i> New Analysis
+                        </a>
+                        <button id="clearCacheBtn" class="btn btn-outline-secondary" data-url="{{ results.url }}">
+                            <i class="fas fa-broom"></i> Clear Cache
+                        </button>
+                        <button id="shareResultsBtn" class="btn btn-outline-success">
+                            <i class="fas fa-share-alt"></i> Share Results
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Share Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">Share Analysis Results</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="shareUrl" class="form-label">Results URL</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="shareUrl" 
+                               value="{{ request.url }}" readonly>
+                        <button class="btn btn-outline-secondary copy-btn" 
+                                data-clipboard-target="#shareUrl">
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize clipboard.js
+        new ClipboardJS('.copy-btn').on('success', function(e) {
+            var originalText = e.trigger.innerHTML;
+            e.trigger.innerHTML = 'Copied!';
+            setTimeout(function() {
+                e.trigger.innerHTML = originalText;
+            }, 2000);
+            e.clearSelection();
+        });
+        
+        // Share modal
+        document.getElementById('shareResultsBtn').addEventListener('click', function() {
+            var shareModal = new bootstrap.Modal(document.getElementById('shareModal'));
+            shareModal.show();
+        });
+        
+        // Clear cache button
+        document.getElementById('clearCacheBtn').addEventListener('click', function() {
+            var url = this.getAttribute('data-url');
+            if (confirm('Are you sure you want to clear the cache for this URL?')) {
+                fetch('/analysis/clear-cache', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'url=' + encodeURIComponent(url)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    alert('Error: ' + error);
+                });
+            }
+        });
+        
+        // Initialize progress circles
+        document.querySelectorAll('.progress-circle').forEach(function(circle) {
+            var value = circle.getAttribute('data-value');
+            var size = circle.getAttribute('data-size');
+            var thickness = circle.getAttribute('data-thickness');
+            var fill = circle.getAttribute('data-fill');
+            
+            var radius = size / 2 - thickness / 2;
+            var circumference = 2 * Math.PI * radius;
+            var dashOffset = circumference * (1 - value / 100);
+            
+            circle.style.width = size + 'px';
+            circle.style.height = size + 'px';
+            
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', size);
+            svg.setAttribute('height', size);
+            
+            var circleEl = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circleEl.setAttribute('cx', size / 2);
+            circleEl.setAttribute('cy', size / 2);
+            circleEl.setAttribute('r', radius);
+            circleEl.setAttribute('fill', 'none');
+            circleEl.setAttribute('stroke', '#e6e6e6');
+            circleEl.setAttribute('stroke-width', thickness);
+            
+            var circleProgress = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circleProgress.setAttribute('cx', size / 2);
+            circleProgress.setAttribute('cy', size / 2);
+            circleProgress.setAttribute('r', radius);
+            circleProgress.setAttribute('fill', 'none');
+            circleProgress.setAttribute('stroke', fill);
+            circleProgress.setAttribute('stroke-width', thickness);
+            circleProgress.setAttribute('stroke-dasharray', circumference);
+            circleProgress.setAttribute('stroke-dashoffset', dashOffset);
+            circleProgress.setAttribute('stroke-linecap', 'round');
+            
+            svg.appendChild(circleEl);
+            svg.appendChild(circleProgress);
+            
+            while (circle.firstChild) {
+                circle.removeChild(circle.firstChild);
+            }
+            
+            var span = document.createElement('span');
+            span.appendChild(document.createTextNode(value + '%'));
+            
+            circle.style.position = 'relative';
+            span.style.position = 'absolute';
+            span.style.top = '50%';
+            span.style.left = '50%';
+            span.style.transform = 'translate(-50%, -50%)';
+            span.style.fontSize = '1.25rem';
+            span.style.fontWeight = 'bold';
+            
+            circle.appendChild(svg);
+            circle.appendChild(span);
+        });
+    });
+</script>
+{% endblock %}

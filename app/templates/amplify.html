@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Lexend+Deca:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/amplify.css">
+    <title>Amplify - AI-Powered SEO Analysis</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">Amplify</div>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/features">Features</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-primary">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="tool-container container">
+        <div class="tool-header">
+            <h1>Website Analysis Tool</h1>
+            <p>Enter any website URL below to get a comprehensive SEO and performance analysis</p>
+        </div>
+
+        <div class="url-form">
+            <form action="/preloader" method="GET" id="analyzeForm">
+                <div class="form-group">
+                    <label for="url" class="form-label">Enter Website URL</label>
+                    <input type="url" id="url" name="url" class="form-input" placeholder="https://example.com" value="{{ url }}" required>
+                </div>
+                <div class="form-submit">
+                    <button type="submit" class="btn btn-primary btn-large">Analyze Website</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="features-section">
+            <div class="section-title text-center">
+                <h2>What You'll Get</h2>
+            </div>
+            <div class="features-grid d-flex justify-between mb-4">
+                <div class="feature-card card">
+                    <h3 class="card-title">Meta Analysis</h3>
+                    <p class="card-content">Get insights into your title tags, meta descriptions, and other crucial meta elements.</p>
+                </div>
+                <div class="feature-card card">
+                    <h3 class="card-title">Content Quality</h3>
+                    <p class="card-content">Evaluate content readability, length, and keyword optimization.</p>
+                </div>
+                <div class="feature-card card">
+                    <h3 class="card-title">Technical SEO</h3>
+                    <p class="card-content">Identify technical issues affecting your site's search visibility.</p>
+                </div>
+            </div>
+            <div class="features-grid d-flex justify-between">
+                <div class="feature-card card">
+                    <h3 class="card-title">Performance Metrics</h3>
+                    <p class="card-content">Get key performance insights including page speed and Core Web Vitals.</p>
+                </div>
+                <div class="feature-card card">
+                    <h3 class="card-title">AI Description</h3>
+                    <p class="card-content">Generate AI-powered descriptions of your business based on your website content.</p>
+                </div>
+                <div class="feature-card card">
+                    <h3 class="card-title">Actionable Recommendations</h3>
+                    <p class="card-content">Get practical steps to improve your website's SEO performance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3 class="footer-title">Amplify</h3>
+                    <p>AI-powered SEO analysis to drive organic growth, increase conversions, and boost site performance.</p>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/features">Features</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="/contact">Contact Us</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Amplify SEO. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('analyzeForm');
+            form.addEventListener('submit', function(e) {
+                const urlInput = document.getElementById('url');
+                let url = urlInput.value.trim();
+                
+                // Add protocol if missing
+                if (url && !/^https?:\/\//i.test(url)) {
+                    url = 'https://' + url;
+                    urlInput.value = url;
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            window.addEventListener('scroll', function() {
+              const header = document.querySelector('.header');
+              if (window.scrollY > 10) {
+                header.classList.add('header-scrolled');
+              } else {
+                header.classList.remove('header-scrolled');
+              }
+            });
+          });
+    </script>
+</body>
+</html>

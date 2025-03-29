@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Static Test</title>
+    <style>
+        /* Inline styles to verify the page works */
+        body { font-family: Arial; padding: 20px; }
+        .hero-title { color: blue; font-size: 32px; }
+    </style>
+</head>
+<body>
+    <h1 class="hero-title">Test Page with Inline Styles</h1>
+    <p>This page uses inline styles to bypass static file loading issues.</p>
+    
+    <script>
+        // Inline script to verify JavaScript works
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('h1').innerHTML += ' <span style="color:green">(JavaScript works!)</span>';
+        });
+    </script>
+</body>
+</html>

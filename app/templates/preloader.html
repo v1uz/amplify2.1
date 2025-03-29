@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Lexend+Deca:wght@400;700&display=swap" rel="stylesheet">
+    <title>Amplify - Loading</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Lexend Deca', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F9F9F9;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Preloader container */
+        .preloader-container {
+            text-align: center;
+            width: 300px;
+        }
+
+        /* Logo */
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        /* Progress bar container */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #f3f3f3;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* Loading text */
+        .loading-text {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* Stage text */
+        .stage-text {
+            font-size: 14px;
+            color: #999;
+            min-height: 40px;
+        }
+
+        /* Retry button */
+        .retry-button {
+            display: none;
+            padding: 10px 20px;
+            background-color: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .retry-button:hover {
+            background-color: #333;
+        }
+
+        /* Error message */
+        .error-message {
+            color: #e74c3c;
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fadbd8;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        /* Cancel button */
+        .cancel-button {
+            background: none;
+            border: none;
+            color: #999;
+            margin-top: 20px;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+
+        .cancel-button:hover {
+            color: #666;
+        }
+
+        /* Animation for the dots */
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .loading-dots::after {
+            content: '.';
+            animation: dots 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="preloader-container">
+        <div class="logo">Amplify</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+
+        </div>
+        <p class="loading-text loading-dots" id="loadingText">Analyzing website</p>
+        <p class="stage-text" id="stageText">Initializing analysis</p>
+        <div class="error-message" id="errorMessage"></div>
+        <button class="retry-button" id="retryButton">Try Again</button>
+        <a id="viewResultsButton" href="#" class="retry-button" style="display: none; margin-left: 10px; text-decoration: none;">View Results</a>
+        <button class="cancel-button" id="cancelButton">Cancel and go back</button>
+    </div>
+
+    <script>
+        // Pass the URL from Flask template to JavaScript
+        const url = "{{ url | safe }}";
+        console.log("URL in preloader.html:", url);
+
+        // DOM elements
+        const progressBar = document.getElementById('progressBar');
+        const loadingText = document.getElementById('loadingText');
+        const stageText = document.getElementById('stageText');
+        const errorMessage = document.getElementById('errorMessage');
+        const retryButton = document.getElementById('retryButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const viewResultsButton = document.getElementById('viewResultsButton'); // Add this button to your HTML
+
+        // Progress stages
+        const stages = [
+            "Initializing analysis",
+            "Fetching website content",
+            "Analyzing page structure",
+            "Extracting SEO metadata",
+            "Checking PageSpeed metrics",
+            "Generating recommendations",
+            "Preparing results"
+        ];
+
+        // Variables to manage progress
+        let currentStage = 0;
+        let progress = 0;
+        let progressInterval;
+        let analysisStarted = false;
+        let analysisId = null;
+        let pollingInterval;
+
+        // Start the progress animation
+        function startProgress() {
+            updateStage(0);
+            
+            progressInterval = setInterval(() => {
+                // Simulate progress, but cap at 95% until confirmed complete
+                if (progress < 95) {
+                    progress += Math.random() * 1; // Slower progress
+                    progressBar.style.width = `${progress}%`;
+                    
+                    // Update stages based on progress
+                    if (progress > 15 && currentStage === 0) updateStage(1);
+                    if (progress > 30 && currentStage === 1) updateStage(2);
+                    if (progress > 50 && currentStage === 2) updateStage(3);
+                    if (progress > 65 && currentStage === 3) updateStage(4);
+                    if (progress > 80 && currentStage === 4) updateStage(5);
+                    if (progress > 90 && currentStage === 5) updateStage(6);
+                }
+            }, 300); // Slowed down slightly
+        }
+
+        // Update the current stage
+        function updateStage(stageIndex) {
+            currentStage = stageIndex;
+            stageText.textContent = stages[stageIndex];
+            
+            // Add a slight progress bump when changing stages
+            progress += 2;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Show error message and retry option
+        function showError(message) {
+            loadingText.textContent = "Analysis failed";
+            loadingText.classList.remove("loading-dots");
+            errorMessage.textContent = message;
+            errorMessage.style.display = "block";
+            retryButton.style.display = "inline-block";
+            progressBar.style.backgroundColor = "#e74c3c";
+            
+            // Stop polling if it's running
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+        }
+
+        // Show manual results button after a long wait
+        function showManualResultsButton() {
+            const resultsUrl = `/analysis/results?url=${encodeURIComponent(url)}`;
+            const viewResultsBtn = document.getElementById('viewResultsButton');
+            
+            if (viewResultsBtn) {
+                viewResultsBtn.style.display = 'inline-block';
+                
+                // Add click handler with safety check
+                viewResultsBtn.onclick = function(e) {
+                    e.preventDefault();
+                    fetch(`/analysis/status?url=${encodeURIComponent(url)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'complete') {
+                                window.location.href = resultsUrl;
+                            } else {
+                                if (confirm('The analysis may not be complete. Results might be incomplete. Continue anyway?')) {
+                                    window.location.href = `${resultsUrl}&incomplete=true`;
+                                }
+                            }
+                        })
+                        .catch(() => {
+                            if (confirm('Could not verify analysis status. Results may be incomplete. Continue anyway?')) {
+                                window.location.href = `${resultsUrl}&incomplete=true`;
+                            }
+                        });
+                };
+            }
+            
+            loadingText.textContent = "Analysis may be complete";
+            
+            // Add notice
+            if (!document.getElementById('manualNotice')) {
+                const notice = document.createElement('p');
+                notice.id = 'manualNotice';
+                notice.textContent = "The analysis is taking longer than expected but may be complete. You can try viewing the results manually.";
+                notice.style.color = "#f39c12";
+                errorMessage.parentNode.insertBefore(notice, errorMessage);
+            }
+        }
+
+        // Complete the progress animation
+        function completeProgress() {
+            clearInterval(progressInterval);
+            progress = 100;
+            progressBar.style.width = "100%";
+            updateStage(6);
+        }
+
+        // Function to start the analysis
+        function startAnalysis() {
+            if (analysisStarted) return;
+            analysisStarted = true;
+            
+            fetch('/analysis/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    showError(`Error: ${data.error}`);
+                    return;
+                }
+                
+                // If we get an analysis ID, start polling
+                if (data.analysis_id) {
+                    analysisId = data.analysis_id;
+                    startPolling();
+                } 
+                // If we get a redirect immediately, use it
+                else if (data.redirect) {
+                    completeProgress();
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 500);
+                }
+            })
+            .catch(error => {
+                showError(`An error occurred during analysis: ${error.message}`);
+            });
+        }
+
+        // Function to poll for analysis status
+        function startPolling() {
+            // Clear any existing polling
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+            
+            // Show manual results button after 60 seconds
+            setTimeout(showManualResultsButton, 60000);
+            
+            // Start polling every 5 seconds
+            pollingInterval = setInterval(() => {
+                checkAnalysisStatus();
+            }, 5000);
+        }
+
+        // Function to check analysis status
+        function checkAnalysisStatus() {
+            const statusUrl = analysisId 
+                ? `/analysis/status/${analysisId}` 
+                : `/analysis/status?url=${encodeURIComponent(url)}`;
+                
+            fetch(statusUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Status check failed: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Status update:", data);
+                    
+                    if (data.status === 'complete') {
+                        // Analysis is complete
+                        completeProgress();
+                        clearInterval(pollingInterval);
+                        
+                        // Redirect to results page
+                        setTimeout(() => {
+                            window.location.href = data.redirect || `/analysis/results?url=${encodeURIComponent(url)}`;
+                        }, 500);
+                    }
+                    else if (data.status === 'failed') {
+                        clearInterval(pollingInterval);
+                        showError(data.error || "Analysis failed for unknown reasons");
+                    }
+                    else if (data.progress) {
+                        // Update progress if server provides it
+                        progress = Math.min(95, data.progress);
+                        progressBar.style.width = `${progress}%`;
+                        
+                        if (data.stage && data.stage < stages.length) {
+                            updateStage(data.stage);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking status:", error);
+                    // Don't stop polling on a single error
+                });
+        }
+
+        // Initialize and start
+        startProgress();
+        startAnalysis();
+
+        // Retry button event
+        retryButton.addEventListener('click', function() {
+            // Reset UI
+            progress = 0;
+            progressBar.style.width = "0%";
+            progressBar.style.backgroundColor = "#1a1a1a";
+            loadingText.textContent = "Analyzing website";
+            loadingText.classList.add("loading-dots");
+            errorMessage.style.display = "none";
+            retryButton.style.display = "none";
+            
+            if (viewResultsButton) {
+                viewResultsButton.style.display = "none";
+            }
+            
+            // Remove any notices
+            const notice = document.getElementById('manualNotice');
+            if (notice) notice.remove();
+            
+            // Reset analysis flags
+            analysisStarted = false;
+            analysisId = null;
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+            
+            // Restart analysis
+            startProgress();
+            startAnalysis();
+        });
+
+        // Cancel button event
+        cancelButton.addEventListener('click', function() {
+            window.location.href = '/amplify';
+        });
+
+    </script>
+</body>
+</html>

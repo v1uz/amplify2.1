@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Static File Test</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .test-box { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Static File Test</h1>
+    
+    <div class="test-box">
+        <h2>Direct CSS Link</h2>
+        <p>CSS should make this text red:</p>
+        <p class="test-css">This text should be red</p>
+        <link rel="stylesheet" href="/static/css/test.css">
+    </div>
+    
+    <div class="test-box">
+        <h2>JavaScript Test</h2>
+        <p>JS should change this text: <span id="js-test">Unchanged</span></p>
+        <script src="/static/js/test.js"></script>
+    </div>
+    
+    <div class="test-box">
+        <h2>File Paths</h2>
+        <p>Static folder: {{ static_folder }}</p>
+        <p>CSS exists: {{ css_exists }}</p>
+        <p>JS exists: {{ js_exists }}</p>
+    </div>
+</body>
+</html>

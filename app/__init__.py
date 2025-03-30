@@ -119,6 +119,16 @@ def register_blueprints(app):
         app.register_blueprint(main_bp)
         app.register_blueprint(analysis_bp, url_prefix='/analysis')
         
+        # Register description blueprint if it exists
+        try:
+            from app.routes.description_routes import description_bp
+            app.register_blueprint(description_bp)
+            logger.info("Description blueprint registered")
+        except ImportError:
+            # If description_routes.py doesn't exist yet, skip this
+            logger.info("Description blueprint not found, skipping")
+            pass
+        
         logger.info("Blueprints registered successfully")
     except Exception as e:
         logger.error(f"Error registering blueprints: {str(e)}")

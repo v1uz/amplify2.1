@@ -13,7 +13,6 @@ description_bp = Blueprint('description', __name__, url_prefix='/description')
 bert_generator = BERTDescriptionGenerator()
 content_extractor = ContentExtractor()
 
-
 @description_bp.route('/analyze', methods=['POST'])
 def analyze_description():
     """

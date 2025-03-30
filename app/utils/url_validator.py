@@ -5,7 +5,11 @@ import re
 import urllib.parse
 import ipaddress
 import socket
+import logging
 from typing import Tuple, Dict, Any, Optional, Union
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 # Common TLDs for validation
 COMMON_TLDS = {
@@ -100,6 +104,9 @@ def normalize_url(url: str) -> str:
         # Parse URL
         parsed = urllib.parse.urlparse(url)
         
+        # Upgrade HTTP to HTTPS
+        scheme = 'https'
+        
         # Remove www if present
         netloc = parsed.netloc
         if netloc.startswith('www.'):
@@ -122,7 +129,7 @@ def normalize_url(url: str) -> str:
         
         # Reconstruct URL
         normalized = urllib.parse.urlunparse((
-            parsed.scheme,
+            scheme,
             netloc,
             path,
             parsed.params,

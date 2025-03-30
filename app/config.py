@@ -2,6 +2,10 @@
 Configuration settings for the Amplify SEO application.
 """
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class Config:
@@ -33,6 +37,7 @@ class Config:
     MAX_TOKEN_LENGTH = int(os.environ.get('MAX_TOKEN_LENGTH') or 500)
     GPT_RATE_LIMIT = int(os.environ.get('GPT_RATE_LIMIT') or 20)  # Seconds to wait between rate-limited requests
 
+
 class DevelopmentConfig(Config):
     """Development configuration."""
     
@@ -59,3 +64,12 @@ class ProductionConfig(Config):
     
     # Logging
     LOG_LEVEL = 'ERROR'
+
+
+# Dictionary mapping environment names to config classes
+config_by_name = {
+    'development': DevelopmentConfig,
+    'production': ProductionConfig,
+    'testing': TestingConfig,
+    'default': DevelopmentConfig
+}

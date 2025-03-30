@@ -9,15 +9,21 @@ import ssl
 import certifi
 import logging
 from flask import current_app
+<<<<<<< HEAD
 from urllib.parse import urlparse
 import requests
 import time
 from typing import Dict, Any
 from urllib.parse import quote_plus
+=======
+from app import cache
+from urllib.parse import urlparse
+>>>>>>> 2fb6475ce9b265101e170543bf5d493c93380032
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
+<<<<<<< HEAD
 
 def get_pagespeed_data(url: str, strategy: str = 'mobile', timeout: int = 60) -> Dict[str, Any]:
     """
@@ -154,6 +160,8 @@ def get_pagespeed_data(url: str, strategy: str = 'mobile', timeout: int = 60) ->
     return {"performance_score": 0, "error": "Failed to get PageSpeed data after multiple attempts"}
 
 # Keep the async functions for future use
+=======
+>>>>>>> 2fb6475ce9b265101e170543bf5d493c93380032
 async def fetch_website_data(url):
     """
     Asynchronously fetch website content with comprehensive error handling.
@@ -214,6 +222,14 @@ async def get_pagespeed_insights(url):
     Returns:
         dict: PageSpeed analysis results
     """
+<<<<<<< HEAD
+=======
+    # Check cache first
+    if hasattr(cache, "__contains__") and url in cache:
+        logger.info(f"Cache hit for PageSpeed data: {url}")
+        return cache[url]
+
+>>>>>>> 2fb6475ce9b265101e170543bf5d493c93380032
     try:
         # Try to get API key from app config
         try:
@@ -261,6 +277,12 @@ async def get_pagespeed_insights(url):
             'recommendations': opportunities[:5]  # Limit to top 5 recommendations
         }
         
+<<<<<<< HEAD
+=======
+        # Store in cache if it exists and supports item assignment
+        if hasattr(cache, "__setitem__"):
+            cache[url] = result
+>>>>>>> 2fb6475ce9b265101e170543bf5d493c93380032
         return result
         
     except aiohttp.ClientResponseError as e:

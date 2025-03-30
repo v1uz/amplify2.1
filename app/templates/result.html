@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Lexend+Deca:wght@400;700&display=swap" rel="stylesheet">
+    <title>Amplify - Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+    <style>
+        .score-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3f6ce1;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #10064e;
+        }
+        .score-section {
+            margin-top: 30px;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #10064e;
+        }
+        .collapsible {
+            cursor: pointer;
+            background-color: #f3f3f3;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .content-panel {
+            padding: 0 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+        .confidence-indicator {
+            margin-top: 0.5rem;
+        }
+        
+        .confidence-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+        
+        .confidence-bar {
+            height: 5px;
+            background-color: #e9ecef;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background-color: #3f6ce1;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="logo">Amplify</header>
+        <div class="horizontal-line"></div>
+        <main class="content">
+            <section class="result-section">
+                <h1 class="result-title">Результаты анализа</h1>
+
+                <!-- Analysis Scores Section -->
+                <div class="score-section">
+                    <h2 class="section-title">Оценки анализа</h2>
+                    <div class="score-cards">
+                        {% if results.metrics.meta_analysis %}
+                        <div class="score-card">
+                            <h3>Метаданные</h3>
+                            <div class="score">{{ results.metrics.meta_analysis.meta_score }}/100</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if results.metrics.content_analysis %}
+                        <div class="score-card">
+                            <h3>Качество контента</h3>
+                            <div class="score">{{ results.metrics.content_analysis.readability_score }}/100</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if results.metrics.technical_analysis %}
+                        <div class="score-card">
+                            <h3>Техническое SEO</h3>
+                            <div class="score">{{ results.metrics.technical_analysis.technical_score }}/100</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if results.metrics.mobile_analysis %}
+                        <div class="score-card">
+                            <h3>Мобильная оптимизация</h3>
+                            <div class="score">{{ results.metrics.mobile_analysis.mobile_score }}/100</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if results.metrics.pagespeed %}
+                        <div class="score-card">
+                            <h3>PageSpeed</h3>
+                            <div class="score">{{ results.metrics.pagespeed.performance_score }}/100</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Original Fields -->
+                <div class="result-item">
+                    <label>Домен:</label>
+                    <input type="text" id="domain" value="{{ results.metrics.title }}" readonly>
+                </div>
+                <div class="result-item">
+                    <label>AI-Generated Description:</label>
+                    <textarea id="bert-description" rows="5" readonly>{{ results.bert_description|default('No AI description generated') }}</textarea>
+                    <div class="confidence-indicator">
+                        {% if results.bert_confidence is defined %}
+                        <div class="confidence-label">Confidence: {{ "%.0f"|format(results.bert_confidence * 100) }}%</div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: {{ results.bert_confidence * 100 }}%;"></div>
+                        </div>
+                        {% else %}
+                        <div class="confidence-label">Confidence: N/A</div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 0%;"></div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="result-item">
+                    <label>Ключевые слова:</label>
+                    <textarea id="keywords" rows="2" readonly>{{ results.keywords }}</textarea>
+                </div>
+                
+                <!-- Detailed Analysis Sections (collapsible) -->
+                <div class="section-title">Детальный анализ</div>
+                
+                <!-- Content Analysis -->
+                <button class="collapsible">Анализ контента</button>
+                <div class="content-panel">
+                    {% if results.metrics.content_analysis %}
+                    <div class="result-item">
+                        <label>Количество слов:</label>
+                        <input type="text" value="{{ results.metrics.content_analysis.word_count }}" readonly>
+                    </div>
+                    <div class="result-item">
+                        <label>Читаемость:</label>
+                        <input type="text" value="{{ results.metrics.content_analysis.readability_score }}/100" readonly>
+                    </div>
+                    {% else %}
+                    <p>Данные анализа контента недоступны</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Technical Analysis -->
+                <button class="collapsible">Техническое SEO</button>
+                <div class="content-panel">
+                    {% if results.metrics.technical_analysis %}
+                    <div class="result-item">
+                        <label>Канонический URL:</label>
+                        <input type="text" value="{{ results.metrics.technical_analysis.canonical.has_canonical }}" readonly>
+                    </div>
+                    <div class="result-item">
+                        <label>Структурированные данные:</label>
+                        <input type="text" value="{{ results.metrics.technical_analysis.schema_markup.has_schema }}" readonly>
+                    </div>
+                    {% else %}
+                    <p>Данные технического анализа недоступны</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Mobile Analysis -->
+                <button class="collapsible">Мобильная оптимизация</button>
+                <div class="content-panel">
+                    {% if results.metrics.mobile_analysis %}
+                    <div class="result-item">
+                        <label>Viewport:</label>
+                        <input type="text" value="{{ results.metrics.mobile_analysis.viewport.has_viewport }}" readonly>
+                    </div>
+                    <div class="result-item">
+                        <label>Адаптивный дизайн:</label>
+                        <input type="text" value="{{ results.metrics.mobile_analysis.get('responsive_css', {}).get('has_media_queries', '') }}" readonly>
+                    </div>
+                    {% else %}
+                    <p>Данные анализа мобильной версии недоступны</p>
+                    {% endif %}
+                </div>
+
+                <!-- Recommendations -->
+                <div class="result-item">
+                    <label>Рекомендации:</label>
+                    <textarea id="recommendations" rows="8" readonly>{{ ', '.join(results.recommendations) }}</textarea>
+                </div>
+                
+                <!-- Full PageSpeed Output -->
+                <div class="result-item">
+                    <label>PageSpeed Insights:</label>
+                    <textarea id="pagespeed" rows="5" readonly>{{ (results.metrics.pagespeed or {}) | tojson | safe }}</textarea>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        // Add collapsible functionality
+        var coll = document.getElementsByClassName("collapsible");
+        for (var i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

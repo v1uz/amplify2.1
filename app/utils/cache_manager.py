@@ -36,9 +36,6 @@ class CacheManager:
         self.lock = threading.RLock()
         
         # Start cleanup thread
-        self.cleanup_thread = threading.Thread(target=self._cleanup_loop, daemon=True)
-        self.cleanup_thread.start()
-        
         if start_cleanup_thread:
             self.cleanup_thread = threading.Thread(target=self._cleanup_loop, daemon=True)
             self.cleanup_thread.start()
@@ -339,10 +336,6 @@ class CacheManager:
             return wrapper
         
         return decorator
-
-
-
-
 
 
 # Create a global instance for convenience

@@ -19,7 +19,7 @@ class TechnicalSEOAnalyzer:
     
     async def analyze(self, url, raw_data, api_data=None):
         """
-        Analyze technical SEO factorsta
+        Analyze technical SEO factors
         
         Args:
             url (str): The URL being analyzed

@@ -108,7 +108,7 @@ class BERTDescriptionGenerator:
                 
         return True
     
-# 1. Improved extract_key_content method to filter UI elements
+    # 1. Improved extract_key_content method to filter UI elements
     def extract_key_content(self, text: str) -> str:
         """Extract relevant company information while filtering UI elements."""
         cleaned_text = self.clean_html(text)
@@ -272,3 +272,25 @@ class BERTDescriptionGenerator:
         except Exception as e:
             logger.error(f"Model generation error: {e}")
             return {"description": "", "confidence": 0.0, "error": str(e)}
+            
+    def process_webpage_content(self, content: str) -> Dict[str, Any]:
+        """
+        Process webpage content to generate a company description.
+        
+        Args:
+            content: The raw content extracted from the webpage
+            
+        Returns:
+            Dictionary with generated description and metadata
+        """
+        # Extract relevant content
+        relevant_content = self.extract_key_content(content)
+        
+        # Generate description
+        result = self.generate_description(relevant_content)
+        
+        # Add metadata
+        result["content_length"] = len(content)
+        result["relevant_content_length"] = len(relevant_content)
+        
+        return result
